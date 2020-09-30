@@ -21,7 +21,7 @@ globals:
   common: -Xmx3g -Xms32m -XX:+UseCompressedOops
 nodes:
   - nodeType: javaengine
-    tag: zulujdk-12.0.2
+    tag: 5.192-openjdk-1.8.0_222
     nodeGroup: shenan
     cloudlets: ${globals.cloudlets}
     displayName: Shenandoah
@@ -111,7 +111,7 @@ onInstall:
   - cmd[*]: |-
       wget https://github.com/jelastic/java-vertical-scaling-test/raw/master/dist/app.jar
       screen -dm bash -c "echo -ne '\n' | java -jar app.jar 100 2 &>> /var/log/run.log"
-  - cmd[shenan, g1, zing, serial, cms, parallel, epsilon]: |-
+  - cmd[ serial, cms, parallel, epsilon]: |-
       screen -dm bash -c 'sleep 300; while true; do a="app"; j=".jar"; /usr/java/latest/bin/jcmd $(pgrep -f $a$j | tail -n1) GC.run &>> /var/log/run.log; sleep 20; done;'  
 
 #  OpenJ9 memory usage should be tracked in a tricky way 
