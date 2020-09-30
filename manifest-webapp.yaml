@@ -2,22 +2,22 @@
 type: install
 id: java-memory-usage-demo
 name: Java Vertical Scaling
-baseUrl: https://raw.githubusercontent.com/jelastic/java-vertical-scaling-test/jakartaee
+baseUrl: https://raw.githubusercontent.com/jelastic/java-vertical-scaling-test/master
 homepage: https://github.com/jelastic/java-vertical-scaling-test
 logo: /images/elastic-duke-70x70.png
 description: |
   Java vertical scaling test:
   * Shenandoah
   * G1
-  * G1 @Dragonwell
   * Serial
   * CMS
   * Parallel
+  * Zing
 globals:
-  cloudlets: 32
-  common: -Xmx4g -Xms32m -XX:+UseCompressedOops
+  cloudlets: 26
+  common: -Xmx3g -XX:+UseCompressedOops
 nodes:
-  - nodeType: payara
+  - nodeType: glassfish
     tag: 5.192-openjdk-1.8.0_222
     nodeGroup: shennan
     cloudlets: ${globals.cloudlets}
@@ -26,7 +26,7 @@ nodes:
       GC_DEF: ShenandoahGC
       _JAVA_OPTIONS: ${globals.common} -XX:+UnlockExperimentalVMOptions -XX:ShenandoahGCHeuristics=compact
 
-  - nodeType: payara
+  - nodeType: glassfish
     tag: 5.192-zulujdk-11.0.4
     nodeGroup: g1
     cloudlets: ${globals.cloudlets}
@@ -36,15 +36,7 @@ nodes:
       GC_DEF: G1GC
       _JAVA_OPTIONS: ${globals.common}
 
-  - nodeType: payara
-    tag: 5.192-dragonwell-8.1.1
-    nodeGroup: dragonwell-g1
-    cloudlets: ${globals.cloudlets}
-    displayName: DragonWell
-    env:
-      GC_DEF: G1GC
-      _JAVA_OPTIONS: ${globals.common} -Xms4g -XX:+UseCompressedOops -XX:+G1ElasticHeap -XX:+ElasticHeapPeriodicUncommit -XX:ElasticHeapPeriodicYGCIntervalMillis=10000 -XX:ElasticHeapYGCIntervalMinMillis=1000 -XX:ElasticHeapInitialMarkIntervalMinMillis=1000 -XX:ElasticHeapPeriodicInitialMarkIntervalMillis=300000 -XX:ElasticHeapPeriodicUncommitStartupDelay=1 -XX:ElasticHeapPeriodicMinYoungCommitPercent=10
-  - nodeType: payara
+  - nodeType: glassfish
     tag: 5.192-zulujdk-11.0.4
     nodeGroup: cms
     cloudlets: ${globals.cloudlets}
@@ -53,7 +45,7 @@ nodes:
       GC_DEF: ConcMarkSweepGC
       _JAVA_OPTIONS: ${globals.common} -XX:+UnlockExperimentalVMOptions
 
-  - nodeType: payara
+  - nodeType: glassfish
     tag: 5.192-zulujdk-11.0.4
     nodeGroup: parallel
     cloudlets: ${globals.cloudlets}
@@ -62,7 +54,7 @@ nodes:
       GC_DEF: ParallelGC
       _JAVA_OPTIONS: ${globals.common} -XX:+UnlockExperimentalVMOptions
 
-  - nodeType: payara
+  - nodeType: glassfish
     tag: 5.192-zulujdk-11.0.4
     nodeGroup: serial
     cloudlets: ${globals.cloudlets}
@@ -88,5 +80,5 @@ actions:
           echo 'seconds=$(date "+%S"); final=`expr $seconds + ${1}`; while [ $(date "+%S") -ne $final ]; do curl -s localhost:8080 > /dev/null; done' > /usr/bin/load
           chmod +x /usr/bin/load
           chmod 777 /usr/bin/load
-          for i in {1..700}; do curl -s localhost:8080 > /dev/null; done
+          for i in {1..1000}; do curl -s localhost:8080 > /dev/null; done
     user: root
