@@ -1,7 +1,7 @@
 type: install
 id: java-memory-usage-demo
 name: Java Vertical Scaling
-baseUrl: https://raw.githubusercontent.com/jelastic/java-vertical-scaling-test/master
+baseUrl: https://raw.githubusercontent.com/jelastic/java-vertical-scaling-test/jakartaee
 homepage: https://github.com/jelastic/java-vertical-scaling-test
 logo: /images/elastic-duke-70x70.png
 description: |
